@@ -14,3 +14,12 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+.DS_Store
+app/.DS_Store
+database/.DS_Store
+public/.DS_Store
+public/img/photos/usuarios/2RPFaw42e3nt9smXD2MXOUwWVYUdeD.png
+public/img/photos/usuarios/jMakBx9OI5yUOumqgMIC1fkQB7xYAl.png
+resources/.DS_Store
+storage/.DS_Store
+tests/.DS_Store
