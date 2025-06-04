@@ -12,6 +12,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            gap: 1rem
         }
 
         .main-ticket .main-modal{
@@ -24,10 +25,29 @@
         }
 
         .main-ticket .main-modal:hover{
-            background-color: #ff7ea7;
             transform: scaleX(1.1);
-            color: #fff;
         }
+
+        .main-ticket .main-modal.estado-completado {
+            background-color: #ff7ea7 !important;
+            color: #fff; 
+        }
+
+        /* Asegura que el backdrop esté arriba */
+        .modal-backdrop {
+            z-index: 1050 !important;
+        }
+
+        /* Asegura que el modal esté arriba del backdrop y del slider */
+        .modal {
+            z-index: 99999 !important;
+        }
+
+        /* Asegura que el contenido del modal también esté al frente */
+        .modal-dialog {
+            z-index: 1061 !important;
+        }
+
 
 
     </style>
@@ -44,31 +64,82 @@
         <h1>Tickets</h1>
         <hr>
 
-        <button type="button" class="main-modal" data-toggle="modal" data-target="#exampleModalCenter">
-            Número de ticket: #7739064
-        </button>
+        <div class="filter-container mb-3" >
+            <label for="estadoFiltro">Filtrar por estado:</label>
+            <select id="estadoFiltro" class="form-control" onchange="filtrarTickets()">
+                <option value="todos">Todos</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Completado">Completado</option>
+            </select>
+        </div>
 
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Número de ticket: #7739064</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Usuario: 1</p>
-                    <p>Producto: tenis nike 1</p>
-                    <p>Lugar: 1</p>
-                    <p>total: $1000</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+
+       @foreach ($ticket as $t)
+            @php
+                $usuario = $users->find($t->usuario);
+                $ubicacion = $ubi->find($t->lugar);
+                $productos = json_decode($t->productos, true);
+            @endphp
+
+
+            <button type="button" class="main-modal {{ $t->estado === 'Completado' ? 'estado-completado' : '' }}" data-estado="{{ $t->estado }}" data-toggle="modal" data-target="#modalTicket{{ $t->id }}">
+                {{ $t->ticket }}
+            </button>
+
+
+            <div class="modal fade" id="modalTicket{{ $t->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel{{ $t->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <form action="{{ route('seccion.updateEstado', $t->id) }}" method="POST" class="modal-content">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-header">
+                            <h5 class="modal-title">Ticket: {{ $t->ticket }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p><b>Nombre del usuario:</b> {{ $usuario ? $usuario->name : 'Desconocido' }}</p>
+                            <p><b>Teléfono:</b> {{ $usuario ? $usuario->telefono : 'Desconocido' }}</p>
+
+                            <p><b>Productos:</b></p>
+                            @if ($productos && count($productos) > 0)
+                                <ul>
+                                    @foreach ($productos as $producto)
+                                        <li>
+                                            <strong>{{ $producto['name'] }}</strong><br>
+                                            Talla: {{ $producto['talla'] }}<br>
+                                            Precio: ${{ number_format($producto['precio'], 2) }}<br>
+                                            Cantidad: {{ $producto['cantidad'] }}<br>
+                                            Subtotal: ${{ number_format($producto['subtotal'], 2) }}
+                                        </li>
+                                        <hr>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p>No hay productos disponibles.</p>
+                            @endif
+
+                            <p><b>Lugar de entrega:</b> {{ $ubicacion ? $ubicacion->nombre : 'Ubicación desconocida' }}</p>
+                            <p><b>Total:</b> ${{ number_format($t->total, 2) }}</p>
+
+                            <div class="form-group">
+                                <label for="estado">Estado del ticket:</label>
+                                <select name="estado" id="estado" class="form-control">
+                                    <option value="Pendiente" {{ $t->estado === 'Pendiente' ? 'selected' : '' }}>Pendiente</option>
+                                    <option value="Completado" {{ $t->estado === 'Completado' ? 'selected' : '' }}>Completado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
+        @endforeach
+
     </div>
 
 @endsection
@@ -83,6 +154,23 @@
 
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function filtrarTickets() {
+            const filtro = document.getElementById('estadoFiltro').value;
+            const tickets = document.querySelectorAll('.main-modal');
+
+            tickets.forEach(ticket => {
+                const estado = ticket.getAttribute('data-estado');
+                if (filtro === 'todos' || estado === filtro) {
+                    ticket.style.display = 'inline-block';
+                } else {
+                    ticket.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
 
 
 @endsection

@@ -332,7 +332,6 @@
                 @csrf
                 <button class="style-btn-comprar" disabled>FINALIZAR COMPRA</button>
             </form>
-            
         </div>
 
         <a href="#" id="menuIcon">
@@ -347,9 +346,10 @@
     <div class="menu-content">
         <a href="{{route('front.home')}}">Inicio</a>
         <a href="{{route('front.nosotros')}}">Catalogo</a>
-        <a id="carritoToggle">
+        <a id="carritoToggleTexto">
             Carrito
         </a>
+        
         <a href="{{route('user.home')}}">Usuario</a>
         
         @guest
@@ -400,22 +400,36 @@
 </script>
 
 <script>
-    // Esta función alterna el carrito
+    // Función para mostrar/ocultar el carrito
     function toggleCarrito() {
         const carrito = document.getElementById('carritoContenedor');
         carrito.style.display = carrito.style.display === 'none' ? 'block' : 'none';
     }
 
-    // Evento para abrir/cerrar desde el ícono principal
-    document.getElementById('carritoToggle').addEventListener('click', toggleCarrito);
+    // Asignar evento al botón del ícono (fuera del modal)
+    const carritoToggle = document.getElementById('carritoToggle');
+    if (carritoToggle) {
+        carritoToggle.addEventListener('click', toggleCarrito);
+    }
 
-    // Delegación para el botón de cerrar que puede no estar al principio
-    document.addEventListener('click', function(e) {
+    // Asignar evento al botón de texto dentro del modal
+    const carritoToggleTexto = document.getElementById('carritoToggleTexto');
+    if (carritoToggleTexto) {
+        carritoToggleTexto.addEventListener('click', () => {
+            toggleCarrito(); // mostrar/ocultar carrito
+            document.getElementById('menuModal').style.display = 'none'; // cerrar modal
+        });
+    }
+
+    // Delegación para botón de cerrar del carrito (si lo usas dentro del carrito)
+    document.addEventListener('click', function (e) {
         if (e.target.classList.contains('close-btn-carr')) {
             toggleCarrito();
         }
     });
 </script>
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

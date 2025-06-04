@@ -144,11 +144,12 @@
     }
 
     .collapse-container {
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        gap:1rem;
     }
 
     .collapse-header {
@@ -176,46 +177,65 @@
       transform: rotate(180deg);
     }
 
+     /* Contenedor general del contenido que se despliega */
     .collapse-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease, padding 0.3s;
-      background: #f9f9f9;
-      padding: 0 15px;
-      display: flex;
-      flex-direction: column;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, padding 0.3s;
+        background: #f9f9f9;
+        padding: 0 15px;
+        display: flex;
+        flex-direction: column;
     }
 
-    .collapse-content .content{
+    /* Contenedor individual de cada producto */
+    .producto-item {
         display: flex;
-        flex-direction: row;
         justify-content: space-around;
         align-items: center;
-        padding: 1rem 0 0 0;
+        gap: 1rem;
+        margin: 1rem 0;
+        flex-wrap: wrap; /* opcional: permite que se adapte en pantallas pequeñas */
     }
 
-
-    .collapse-content .content img{
+    /* Imagen del producto */
+    .producto-item img {
         height: 100px;
         object-fit: cover;
         border-radius: 15px;
     }
 
-
-    .collapse-content.open {
-      padding: 0 15px;
-      max-height: 550px; 
-      overflow-y: auto;
+    /* Contenedor .content opcional (puede quedar vacío o usarse para padding extra) */
+    .content {
+        padding: 1rem 0 0 0;
     }
 
-    .collapse-content .total{
+    /* Total al final */
+    .collapse-content .total {
         width: 100%;
         margin: 1rem 0 2rem 0;
         padding: 0 2rem;
         text-align: end;
         font-weight: 700;
-        color: #039858;
     }
+
+    /* Espacio entre bloques de ticket */
+    .collapse-item {
+        margin-bottom: 1rem;
+    }
+
+    .collapse-item:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Cuando se expande el contenido */
+    .collapse-content.open {
+        padding: 0 15px;
+        max-height: 550px; 
+        overflow-y: auto;
+    }
+
+
 
     @media(min-width: 576px) and (max-width: 992px){
         .sesion_main .iniciosesion{
@@ -358,28 +378,31 @@
         <div class="historial">
             <h2>Historial de compras</h2>
             <p class="barra"></p>
-            <div class="collapse-container">
-                <div class="collapse-header" onclick="toggleCollapse(this)">
-                    Número de ticket: #1455212
-                    <span class="collapse-icon">&#9660;</span>
-                </div>
-                
-                <div class="collapse-content">
-                    <div class="content">
-                        <img src="img/design/recursos/nike.png" alt="">
-                        <p>2x nombre del producto</p>
-                        <p>Talla: 27</p>
-                        <p>Subtotal: $1000,8000</p>
+           <div class="collapse-container">
+                @foreach ($tickets as $t)
+                    <div class="collapse-header" onclick="toggleCollapse(this)">
+                        {{ $t->ticket }}
+                        <span class="collapse-icon">&#9660;</span>
                     </div>
-                    <div class="content">
-                        <img src="img/design/recursos/nike.png" alt="">
-                        <p>2x nombre del producto</p>
-                        <p>Talla: 27</p>
-                        <p>Subtotal: $1000,8000</p>
+                    <div class="collapse-content">
+                        @foreach ($t->productos_array as $producto)
+                            <div class="content">
+                                <div class="producto-item">
+                                    <img src="{{ $producto['imagen_url'] }}" alt="{{ $producto['name'] }}">
+                                    <p>{{ $producto['cantidad'] }}x {{ $producto['name'] }}</p>
+                                    <p>Talla: {{ $producto['talla'] }}</p>
+                                    <p>Subtotal: ${{ number_format($producto['subtotal'], 2, ',', '.') }}</p>
+                                    
+                                    
+                                </div>
+                            </div>
+                        @endforeach
+                        <p class="total">Estado:  {{ $t->estado }} <br>  Total: ${{ $t->total }}</p>
                     </div>
-                    <p class="total">Total: $1000, 8000</p>
-                </div>
+                @endforeach
+
             </div>
+
         </div>
 
     </section>

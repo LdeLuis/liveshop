@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Configuracion;
 use App\User;
+use App\Ticket;
+use App\Imagen;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+
 
 
 use Auth;
@@ -35,9 +38,25 @@ class HomeController extends Controller
         $user_id = Auth::user()->id;
         $config = Configuracion::first();
         $usuario = User::find($user_id);
+        $tickets = Ticket::where('usuario', $user_id)->get();
 
-        return view('user.home', compact('config', 'usuario'));
+        foreach ($tickets as $ticket) {
+            $productos = json_decode($ticket->productos, true);
+
+            foreach ($productos as &$producto) {
+                $imagen = \App\Imagen::where('seccion', $producto['id'])->first();
+                $producto['imagen_url'] = $imagen 
+                    ? asset('img/photos/catalogo/' . $imagen->imagen) 
+                    : asset('img/design/recursos/nike.png');
+            }
+
+            $ticket->productos_array = $productos;
+        }
+
+        return view('user.home', compact('config', 'usuario', 'tickets'));
     }
+
+
 
     public function update(Request $request)
     {
@@ -102,6 +121,7 @@ class HomeController extends Controller
 
         return redirect()->back()->with('success', 'Imagen actualizada correctamente.');
     }
+
 
 
 }

@@ -32,7 +32,7 @@
         return redirect()->back()->with('mensaje', 'Carrito vaciado');
     })->name('carrito.vaciar');
 
-     Route::post('/ticket', 'FrontController@ticket')->name('front.ticket');
+    Route::post('/ticket', 'FrontController@ticket')->name('front.ticket');
     Route::get('/detalleCarrito', 'FrontController@detalleCarrito')->name('front.detalleCarrito');
     Route::get('/shop', 'FrontController@nosotros')->name('front.nosotros');
     Route::get('/contacto', 'FrontController@contacto')->name('front.contacto');
@@ -163,6 +163,9 @@
             Route::delete('/destroy_img/{id}','SeccionController@destroy_img')->name('destroy_img');
             Route::delete('/destroy_ubi/{id}','SeccionController@destroy_ubi')->name('destroy_ubi');
             Route::get('/ubicaciones','SeccionController@ubicaciones')->name('ubicaciones');
+            Route::get('/tickets','SeccionController@tickets')->name('tickets');
+            Route::put('/ticket/{id}/estado', 'SeccionController@updateEstado')->name('updateEstado');
+
         });
     });
 

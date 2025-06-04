@@ -20,6 +20,8 @@ use App\Talla;
 use App\Imagen;
 use App\Usuario;
 use App\Ubicacion;
+use App\Ticket;
+use App\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -48,6 +50,8 @@ class SeccionController extends Controller
         $marcas = Marca::all();
         $imagen = Imagen::all();
         $ubi = Ubicacion::all();
+        $ticket = Ticket::all();
+        $users = User::all();
         $catalogo_caracteristicas = CatalogoCaracteristicas::all();
         $catalogo_galeria = CatalogoGaleria::all();
         $tematicas = Tematica::where('activo', 1)->get()->toBase();
@@ -66,7 +70,7 @@ class SeccionController extends Controller
             $ruta = 'config.secciones.'.$seccion->seccion;
         }
 
-        return view($ruta, compact('seccion', 'config', 'elem_general', 'faqs', 'politicas', 'elements', 'sliders', 'categorias', 'catalogos', 'catalogo_caracteristicas', 'catalogo_galeria', 'tematicas', 'blogs','marcas','imagen','ubi'));
+        return view($ruta, compact('seccion', 'config', 'elem_general', 'faqs', 'politicas', 'elements', 'sliders', 'categorias', 'catalogos', 'catalogo_caracteristicas', 'catalogo_galeria', 'tematicas', 'blogs','marcas','imagen','ubi','ticket','users'));
     }
 
     public function textglobalseccion(Request $request){
@@ -360,5 +364,30 @@ class SeccionController extends Controller
 
         return view('seccion.ubicaciones', compact('config','ubi'));
     }
+
+   public function tickets(){
+        $config = Configuracion::first();
+        $ticket = Ticket::all();
+        $users = User::all(); 
+        $ubi = ubicacion::all();
+
+        return view('seccion.tickets', compact('config', 'ticket', 'users', 'ubi'));
+    }
+
+    public function updateEstado(Request $request, $id)
+    {
+        $ticket = Ticket::findOrFail($id);
+        $request->validate([
+            'estado' => 'required|in:Pendiente,Completado',
+        ]);
+
+        $ticket->estado = $request->estado;
+        $ticket->save();
+
+        \Toastr::success('Se actualizo el estado del ticket');
+        return redirect()->back()->with('success', 'Estado del ticket actualizado correctamente.');
+    }
+
+
 
 }
