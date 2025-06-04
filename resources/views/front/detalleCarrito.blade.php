@@ -186,6 +186,14 @@
             width: 20rem;
         }
 
+        #paypalButtons {
+            display: flex !important;
+            margin-bottom: 10rem;
+            /* margin-top: 5rem; */
+            width: 50rem;
+            justify-content: center;
+        }
+
          @media(min-width: 576px) and (max-width: 992px){
 
          }
