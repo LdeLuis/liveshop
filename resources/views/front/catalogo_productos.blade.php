@@ -547,7 +547,7 @@
                 </div> --}}
                 @if (Auth::check())
                     <div id="form-container" style="display: none;">
-                        <form class="hid-form" action="carrito.agregar" method="POST">
+                        <form class="hid-form" action="{{route('carrito.agregar')}}" method="POST">
                             @csrf
                             <input type="hidden" name="id" value="{{ $articulo->id }}">
                             <input type="hidden" name="nombre" value="{{ $articulo->nombre }}">

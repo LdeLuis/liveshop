@@ -340,10 +340,6 @@
                 @csrf
                 <button class="style-btn-comprar" disabled>FINALIZAR COMPRA</button>
             </form>
-<<<<<<< HEAD
-=======
-
->>>>>>> 2e6aa80 (cambios pasarela de pago)
         </div>
 
         <a href="#" id="menuIcon">
@@ -356,7 +352,6 @@
 
 <div id="menuModal" class="menu-modal">
     <div class="menu-content">
-<<<<<<< HEAD
         <a href="{{route('front.home')}}">Inicio</a>
         <a href="{{route('front.nosotros')}}">Catalogo</a>
         <a id="carritoToggleTexto">
@@ -365,15 +360,7 @@
         
         <a href="{{route('user.home')}}">Usuario</a>
         
-=======
-        <a href="{{ route('front.home') }}">Inicio</a>
-        <a href="{{ route('front.nosotros') }}">Catalogo</a>
-        <a id="carritoToggle">
-            Carrito
-        </a>
-        <a href="{{ route('user.home') }}">Usuario</a>
 
->>>>>>> 2e6aa80 (cambios pasarela de pago)
         @guest
             <a href="{{ route('login') }}" class="sesion">Inicio de sesión</a>
         @endguest
