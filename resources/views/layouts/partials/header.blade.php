@@ -354,9 +354,11 @@
     <div class="menu-content">
         <a href="{{route('front.home')}}">Inicio</a>
         <a href="{{route('front.nosotros')}}">Catalogo</a>
-        <a id="carritoToggleTexto">
-            Carrito
-        </a>
+        @auth
+            <a id="carritoToggleTexto">
+                Carrito
+            </a>
+         @endauth
         
         <a href="{{route('user.home')}}">Usuario</a>
         
