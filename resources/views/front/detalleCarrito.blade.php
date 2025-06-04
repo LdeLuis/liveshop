@@ -185,6 +185,22 @@
             /* background-color: red; */
             width: 20rem;
         }
+
+         @media(min-width: 576px) and (max-width: 992px){
+
+         }
+
+         @media(min-width: 0px) and (max-width: 576px){
+            #carrito-lista-2 article {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .ubicaciones .textos-ubi {
+                display: flex;
+                flex-direction: column;
+            }
+         }
     </style>
 
 @endsection

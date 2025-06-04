@@ -250,7 +250,7 @@
         }
 
         .livesh .carru .tarjeta{
-            width: 16rem;
+            width: 22%;
             height: 30rem;
             background-color: #feb8ce;
             border-radius: 7px;

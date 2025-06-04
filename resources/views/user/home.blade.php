@@ -177,7 +177,6 @@
       transform: rotate(180deg);
     }
 
-     /* Contenedor general del contenido que se despliega */
     .collapse-content {
         max-height: 0;
         overflow: hidden;
@@ -188,29 +187,26 @@
         flex-direction: column;
     }
 
-    /* Contenedor individual de cada producto */
     .producto-item {
         display: flex;
         justify-content: space-around;
         align-items: center;
         gap: 1rem;
         margin: 1rem 0;
-        flex-wrap: wrap; /* opcional: permite que se adapte en pantallas pequeñas */
+        flex-wrap: wrap; 
     }
 
-    /* Imagen del producto */
     .producto-item img {
         height: 100px;
         object-fit: cover;
         border-radius: 15px;
     }
 
-    /* Contenedor .content opcional (puede quedar vacío o usarse para padding extra) */
+ 
     .content {
         padding: 1rem 0 0 0;
     }
 
-    /* Total al final */
     .collapse-content .total {
         width: 100%;
         margin: 1rem 0 2rem 0;
@@ -219,7 +215,6 @@
         font-weight: 700;
     }
 
-    /* Espacio entre bloques de ticket */
     .collapse-item {
         margin-bottom: 1rem;
     }
@@ -228,7 +223,6 @@
         margin-bottom: 0;
     }
 
-    /* Cuando se expande el contenido */
     .collapse-content.open {
         padding: 0 15px;
         max-height: 550px; 
@@ -265,6 +259,12 @@
 
         .sesion_main .historial{
             margin: 5% 5% 20% 5%;
+        }
+
+        .producto-item {
+            flex-direction: column;
+            gap: 0;
+            margin: 1rem 0;
         }
     }
 

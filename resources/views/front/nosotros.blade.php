@@ -53,11 +53,11 @@
             padding: 2rem 0;
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-evenly;
+            justify-content: center;
         }
 
         .catalogo .carru .tarjeta{
-            width: 16rem;
+            width: 22%;
             height: 30rem;
             background-color: #feb8ce;
             border-radius: 7px;
@@ -330,7 +330,7 @@
                             </div>
                         </div>
                         <div class="content">
-                            <h3><a href="">{{ $catalogo->nombre }}</a></h3>
+                            <h3><a href={{ route('front.catalogo_productos', ['id' => $catalogo->id]) }}"">{{ $catalogo->nombre }}</a></h3>
                             <p>${{ number_format($catalogo->precio, 2) }} MXN</p>
                         </div>
                     </div>
