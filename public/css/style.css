@@ -1,0 +1,14 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-size: 1rem;
+}
+
+:root {
+    --green: #00ae64;
+    --green2: #039858;
+    --pink: #feb8ce;
+    --pink2: #ff7ea7;
+    --white: #fff;
+    --blue: #2e4ef6;
+}
