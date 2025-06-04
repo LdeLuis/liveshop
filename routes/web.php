@@ -22,6 +22,7 @@
 
     Route::get('/', 'FrontController@index')->name('front.home');
 
+
     Route::post('/carrito/agregar', 'FrontController@agregarAlCarrito')->name('carrito.agregar');
     Route::get('/carrito', 'FrontController@verCarrito')->name('carrito.ver');
     Route::post('/carrito/actualizar', 'FrontController@actualizar')->name('carrito.actualizar');

@@ -545,25 +545,31 @@
                         </label>
                     </div>
                 </div> --}}
+                @if (Auth::check())
+                    <div id="form-container" style="display: none;">
+                        <form class="hid-form" action="carrito.agregar" method="POST">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $articulo->id }}">
+                            <input type="hidden" name="nombre" value="{{ $articulo->nombre }}">
+                            <input type="hidden" name="precio" value="{{ $articulo->precio }}">
+                            <input type="hidden" name="talla" id="input-talla">
 
-                <div id="form-container" style="display: none;">
-                    <form class="hid-form" action="{{ route('carrito.agregar') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="id" value="{{ $articulo->id }}">
-                        <input type="hidden" name="nombre" value="{{ $articulo->nombre }}">
-                        <input type="hidden" name="precio" value="{{ $articulo->precio }}">
-                        <input type="hidden" name="talla" id="input-talla">
+
+                            <div class="input-group mb-3" style="width: 30%">
+                                <span class="input-group-text" id="basic-addon1">Cantidad</span>
+                                <input type="number" class="form-control" name="cantidad" id="input-cantidad"
+                                    value="1" min="1" aria-describedby="basic-addon1" onkeydown="return false;">
+                            </div>
 
 
-                        <div class="input-group mb-3" style="width: 30%">
-                            <span class="input-group-text" id="basic-addon1">Cantidad</span>
-                            <input type="number" class="form-control" name="cantidad" id="input-cantidad" value="1"
-                                min="1" aria-describedby="basic-addon1" onkeydown="return false;">
-                        </div>
+                            <button type="submit" id="btn-comprar" disabled>COMPRAR</button>
 
-                        <button type="submit" id="btn-comprar" disabled>COMPRAR</button>
-                    </form>
-                </div>
+
+                        </form>
+                    </div>
+                @else
+                <a href="{{ route('login') }}" class="btn btn-primary">Inicia sesión para comprar</a>
+                @endif
 
 
                 {{-- <div class="estatus">

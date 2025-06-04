@@ -150,7 +150,7 @@
         }
 
         .cont-ubis {
-            margin-bottom: 10rem;
+            margin-bottom: 2rem;
             display: flex;
             flex-direction: column;
             row-gap: 1rem;
@@ -205,9 +205,16 @@
 
 @endsection
 
+<head>
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=AWJWVYgWB-e5oMJ7byzCgmhKIJro7sNN0tjt9A9yeEWgtXYumc1LvYTscD9tglhXJVnRRSUNWPyhzJz3&currency=MXN">
+    </script>
+</head>
+
 @section('content')
 
-    <form style="width:100%; display:flex;flex-direction:column; justify-content:center; align-items:center" action="{{route('front.ticket')}}" method="POST">
+    <form style="width:100%; display:flex;flex-direction:column; justify-content:center; align-items:center"
+        action="{{ route('front.ticket') }}" method="POST">
         @csrf
         <h2>Resumen de pedido:</h2>
         <div id="carrito-lista-2">
@@ -225,9 +232,9 @@
                         Cantidad:
                         <div class="botones-carr">
                             <input type="number" class="cantidad-input-2 form-control" value="{{ $item['cantidad'] }}"
-                                min="1" max="{{ $talla->cantidad ?? 10 }}" onkeydown="return false;">
-                            <button class="btn-actualizar-2">Actualizar</button>
-                            <button class="btn-eliminar-2"><i class="fa-solid fa-trash"></i></button>
+                                min="1" max="{{ $talla->cantidad ?? 10 }}" onkeydown="return false;" readonly>
+                            {{-- <button class="btn-actualizar-2">Actualizar</button>
+                            <button class="btn-eliminar-2"><i class="fa-solid fa-trash"></i></button> --}}
                         </div>
                     </article>
                 @endforeach
@@ -251,7 +258,7 @@
                     <div class="radio-button-container">
                         <div class="radio-button">
                             <input required type="radio" class="radio-button__input" id="radio{{ $u->id }}"
-                                name="radiolugar" value="{{$u->id}}">
+                                name="radiolugar" value="{{ $u->id }}">
                             <label class="radio-button__label" for="radio{{ $u->id }}">
                                 <span class="radio-button__custom"></span>
                             </label>
@@ -266,13 +273,86 @@
             @endforeach
         </div>
 
-        <button class="style-btn-comprar-2">FINALIZAR COMPRA</button>
+        <h2>Metodo de pago:</h2>
+        <div id="paypalButtons"></div>
+
+        {{-- <button class="style-btn-comprar-2">FINALIZAR COMPRA</button> --}}
 
     </form>
 
 @endsection
 
+
+
+<script>
+    function redirectPost(url, data = {}) {
+        // Obtener el valor del radio seleccionado con name="radiolugar"
+        const radioSeleccionado = document.querySelector('input[name="radiolugar"]:checked');
+        if (!radioSeleccionado) {
+            Swal.fire({
+                icon: 'warning',
+                title: '¡Atención!',
+                text: 'Por favor, selecciona un punto de entrega.',
+                confirmButtonText: 'Ok'
+            });
+            return; // No enviamos si no hay selección
+        }
+
+
+        // Agregamos el valor seleccionado al objeto data
+        data.radiolugar = radioSeleccionado.value;
+
+        // Crear el formulario
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+
+        // Token CSRF para Laravel
+        var csrfInput = document.createElement('input');
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}'; // Reemplaza aquí con blade token
+        csrfInput.type = 'hidden';
+        form.appendChild(csrfInput);
+
+        // Añadir los demás datos al formulario
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = data[key];
+                form.appendChild(input);
+            }
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{ number_format($total, 2, '.', '') }}' // Total del backend
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                redirectPost("{{ route('front.ticket') }}", {
+                    orderId: data.orderID
+                });
+            });
+        }
+    }).render('#paypalButtons');
+</script>
+
+
 @section('scripts')
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

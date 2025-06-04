@@ -29,19 +29,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
+use Auth;
 
 
 
 class FrontController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $config = Configuracion::first();
         $elements = Elemento::where('seccion', 4)->get();
         $slider_principal = SliderPrincipal::all();
         $marca = Marca::all();
         $categoria = Categoria::all();
 
-        $perPage = $request->header('X-Per-Page') 
+        $perPage = $request->header('X-Per-Page')
             ?? $request->input('per_page', 8);
 
         $catalogos = Catalogo::where('activo', 1)
@@ -51,25 +53,32 @@ class FrontController extends Controller
         $imagenesPorSeccion = Imagen::all()->groupBy('seccion')->map->first();
 
         return view('front.index', compact(
-            'config', 'elements', 'slider_principal', 'catalogos', 
-            'marca', 'categoria', 'imagenesPorSeccion'
+            'config',
+            'elements',
+            'slider_principal',
+            'catalogos',
+            'marca',
+            'categoria',
+            'imagenesPorSeccion'
         ));
     }
 
-    
-    
 
-    public function admin() {
+
+
+    public function admin()
+    {
         return view('front.admin');
     }
 
-    public function nosotros(Request $request) {
+    public function nosotros(Request $request)
+    {
         $config = Configuracion::first();
         $elements = Elemento::all();
 
         $tipo = $request->query('tipo');
 
-        $perPage = $request->header('X-Per-Page') 
+        $perPage = $request->header('X-Per-Page')
             ?? $request->input('per_page', 8);
 
         $catalogosQuery = Catalogo::query();
@@ -86,14 +95,16 @@ class FrontController extends Controller
         return view('front.nosotros', compact('config', 'elements', 'catalogos', 'tipo', 'imagenesPorSeccion'));
     }
 
-    public function contacto() {
+    public function contacto()
+    {
         $config = Configuracion::first();
         $elements = Elemento::all();
 
         return view('front.contacto', compact('config', 'elements'));
     }
 
-    public function login() {
+    public function login()
+    {
         $config = Configuracion::first();
         $elements = Elemento::all();
 
@@ -101,14 +112,16 @@ class FrontController extends Controller
     }
 
 
-    public function perfil() {
+    public function perfil()
+    {
         $config = Configuracion::first();
         $elements = Elemento::all();
 
         return view('front.perfil', compact('config', 'elements'));
     }
 
-    public function registro() {
+    public function registro()
+    {
         $config = Configuracion::first();
         $elements = Elemento::all();
 
@@ -203,6 +216,8 @@ class FrontController extends Controller
 
     public function ticket(Request $request)
     {
+        $user_id = Auth::user()->id;
+
         $carrito = Session::get('carrito');
         $total = 0;
 
@@ -229,17 +244,18 @@ class FrontController extends Controller
         $ticket->productos = json_encode($detalle);
         $ticket->total = $total;
         $ticket->lugar = $request->radiolugar;
+        $ticket->usuario = $user_id;
 
 
         if ($ticket->save()) {
             Session::forget('carrito');
             \Toastr::success('Compra realizada Exitosamente!');
-        
+
             foreach ($detalle as $item) {
                 $articulo = Talla::where('seccion', $item['id'])
-                                 ->where('talla', $item['talla'])
-                                 ->first();
-        
+                    ->where('talla', $item['talla'])
+                    ->first();
+
                 if ($articulo) {
                     $articulo->cantidad -= $item['cantidad']; // descuenta según la cantidad comprada
                     $articulo->save();
@@ -248,144 +264,162 @@ class FrontController extends Controller
         } else {
             \Toastr::error('Error al hacer la compra');
         }
-        
+
 
         return redirect()->route('front.home');
     }
 
-    public function catalogo_detalle(Catalogo $producto) {
+    public function catalogo_detalle(Catalogo $producto)
+    {
         return view('front.catalogo_detalle', compact('producto'));
     }
 
     public function detalleCarrito()
     {
+        $carrito = session('carrito', []);
+        $total = 0;
+
+        foreach ($carrito as $item) {
+            $total += $item['precio'] * $item['cantidad'];
+        }
         $direcciones = Ubicacion::all();
 
-        return view('front.detalleCarrito', compact('direcciones'));
+        return view('front.detalleCarrito', compact('direcciones', 'carrito', 'total'));
     }
 
-    public function blog() {
+    public function blog()
+    {
         $tematicas = Tematica::where('activo', 1)->where('oculto', 0)->get()->toBase();
         $blogs = Blog::where('activo', 1)->where('oculto', 0)->get()->toBase();
 
         return view('front.blog', compact('blogs', 'tematicas'));
     }
 
-    public function blog_detalle(Blog $blog) {
+    public function blog_detalle(Blog $blog)
+    {
         return view('front.blog_detalle', compact('blog'));
     }
 
-    public function aviso_privacidad() {
+    public function aviso_privacidad()
+    {
         $aviso_privacidad = Politica::find(1);
         return view('front.aviso_privacidad', compact('aviso_privacidad'));
     }
 
-    public function metodos_pago() {
+    public function metodos_pago()
+    {
         $metodos_pago = Politica::find(2);
         return view('front.metodos_pago', compact('metodos_pago'));
     }
 
-    public function devoluciones() {
+    public function devoluciones()
+    {
         $devoluciones = Politica::find(3);
         return view('front.devoluciones', compact('devoluciones'));
     }
 
-    public function terminos_condiciones() {
+    public function terminos_condiciones()
+    {
         $terminos_condiciones = Politica::find(4);
         return view('front.terminos_condiciones', compact('terminos_condiciones'));
     }
 
-    public function garantias() {
+    public function garantias()
+    {
         $garantias = Politica::find(7);
         return view('front.garantias', compact('garantias'));
     }
 
-    public function politicas_envio() {
+    public function politicas_envio()
+    {
         $politicas_envio = Politica::find(6);
         $terminos_condiciones = Politica::find(4);
-        return view('front.politicas_envio', compact('politicas_envio','terminos_condiciones'));
+        return view('front.politicas_envio', compact('politicas_envio', 'terminos_condiciones'));
     }
 
-    public function faqs() {
+    public function faqs()
+    {
         $preguntas = Faq::all();
         return view('front.faqs', compact('preguntas'));
     }
 
-    public function formularioContact(Request $request) {
+    public function formularioContact(Request $request)
+    {
         $mail = new PHPMailer;
-		$validate = Validator::make($request->all(),[
-			'nombre' => 'required',
-			"empresa" => "required",
-			'email' => 'required',
+        $validate = Validator::make($request->all(), [
+            'nombre' => 'required',
+            "empresa" => "required",
+            'email' => 'required',
             'whatsapp' => 'required',
-			"mensaje" => "required",
-		],[],[]);
+            "mensaje" => "required",
+        ], [], []);
 
-		if ($validate->fails()) {
-			\Toastr::error('Error, se requieren todos los datos');
-			return redirect()->back();
-		}
+        if ($validate->fails()) {
+            \Toastr::error('Error, se requieren todos los datos');
+            return redirect()->back();
+        }
 
-		$data = array(
-			'tipoForm' => $request->tipoForm,
-			'nombre' => $request->nombre,
-			'empresa' => $request->empresa,
-			'email' => $request->email,
+        $data = array(
+            'tipoForm' => $request->tipoForm,
+            'nombre' => $request->nombre,
+            'empresa' => $request->empresa,
+            'email' => $request->email,
             'whatsapp' => $request->whatsapp,
-			'mensaje' => $request->mensaje,
-			'hoy' => Carbon::now()->format('d-m-Y')
-		);
+            'mensaje' => $request->mensaje,
+            'hoy' => Carbon::now()->format('d-m-Y')
+        );
 
-		$html = view('front.mailcontact', compact('data'));
+        $html = view('front.mailcontact', compact('data'));
 
-		$config = Configuracion::first();
+        $config = Configuracion::first();
 
-		try {
-			$mail->isSMTP();
-			// $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-			// $mail->SMTPDebug = 2;
-			$mail->Host = $config->remitentehost;
-			$mail->SMTPAuth = true;
-			$mail->Username = $config->remitente;
-			$mail->Password = $config->remitentepass;
-			$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-			$mail->Port = $config->remitenteport;
+        try {
+            $mail->isSMTP();
+            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+            // $mail->SMTPDebug = 2;
+            $mail->Host = $config->remitentehost;
+            $mail->SMTPAuth = true;
+            $mail->Username = $config->remitente;
+            $mail->Password = $config->remitentepass;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port = $config->remitenteport;
 
-			$mail->SetFrom($config->remitente, 'Ragnar - Contacto');
-			$mail->isHTML(true);
+            $mail->SetFrom($config->remitente, 'Ragnar - Contacto');
+            $mail->isHTML(true);
 
-			$mail->addAddress($config->destinatario,'Ragnar - Contacto');
-			if (!empty($config->destinatario2)) {
-				$mail->AddBCC($config->destinatario2,'Ragnar - Contacto');
-			}
+            $mail->addAddress($config->destinatario, 'Ragnar - Contacto');
+            if (!empty($config->destinatario2)) {
+                $mail->AddBCC($config->destinatario2, 'Ragnar - Contacto');
+            }
 
-			$mail->Subject = 'Mensaje';
+            $mail->Subject = 'Mensaje';
 
-			$mail->msgHTML($html);
-			// $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+            $mail->msgHTML($html);
+            // $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
-			if($mail->send()){
+            if ($mail->send()) {
                 \Toastr::success('Correo enviado Exitosamente!');
-				return redirect()->back();
-			}else{
-				\Toastr::error('Error al enviar el correo');
-				return redirect()->back();
-			}
-		} catch (phpmailerException $e) {
-			\Toastr::error($e->errorMessage());//Pretty error messages from PHPMailer
-			return redirect()->back();
-		} catch (Exception $e) {
-			\Toastr::error($e->getMessage());//Boring error messages from anything else!
-			return redirect()->back();
-		}
+                return redirect()->back();
+            } else {
+                \Toastr::error('Error al enviar el correo');
+                return redirect()->back();
+            }
+        } catch (phpmailerException $e) {
+            \Toastr::error($e->errorMessage()); //Pretty error messages from PHPMailer
+            return redirect()->back();
+        } catch (Exception $e) {
+            \Toastr::error($e->getMessage()); //Boring error messages from anything else!
+            return redirect()->back();
+        }
     }
 
-    public function mailtest() {
+    public function mailtest()
+    {
 
         // $tipo_form = "home";
         $tipo_form = "contacto";
 
-        if($tipo_form == "home") {
+        if ($tipo_form == "home") {
             $data = array(
                 'tipoForm' => $tipo_form,
                 'nombre' => 'Michael Eduardo Sandoval Pérez',
@@ -393,7 +427,7 @@ class FrontController extends Controller
                 'mensaje' => "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
                 'hoy' => Carbon::now()->format('d-m-Y')
             );
-        } else if($tipo_form == "contacto") {
+        } else if ($tipo_form == "contacto") {
             $data = array(
                 'tipoForm' => $tipo_form,
                 'nombre' => 'Michael Eduardo Sandoval Pérez',
@@ -403,12 +437,8 @@ class FrontController extends Controller
                 'hoy' => Carbon::now()->format('d-m-Y')
             );
         } else {
-
         }
 
         return view('front.mailtest', compact('data'));
     }
 }
-
-
-

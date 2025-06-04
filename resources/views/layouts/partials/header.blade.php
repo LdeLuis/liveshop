@@ -1,5 +1,5 @@
 <style>
-    header{
+    header {
         width: 100%;
         height: 10rem;
         display: flex;
@@ -9,10 +9,10 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        background-image: url({{asset('img/design/recursos/shape2.png')}})
+        background-image: url({{ asset('img/design/recursos/shape2.png') }})
     }
 
-    header .top-header{
+    header .top-header {
         width: 100%;
         height: 3.5rem;
         background-color: #00ae64;
@@ -20,7 +20,7 @@
         justify-content: space-around;
     }
 
-    header .top-header div:first-child{
+    header .top-header div:first-child {
         height: 100%;
         display: flex;
         flex-direction: row;
@@ -29,21 +29,21 @@
         gap: 0.7rem;
     }
 
-    header .top-header div:first-child .rosa{
+    header .top-header div:first-child .rosa {
         color: #feb8ce;
         font-size: 1.2rem;
         margin: 0;
         letter-spacing: 0.2rem;
     }
 
-    header .top-header div:first-child .blanca{
+    header .top-header div:first-child .blanca {
         color: #fff;
         font-size: 1.2rem;
         margin: 0;
         letter-spacing: 0.2rem;
     }
 
-    header .top-header div:last-child{
+    header .top-header div:last-child {
         height: 100%;
         display: flex;
         flex-direction: row;
@@ -52,12 +52,12 @@
         gap: 1.2rem;
     }
 
-    header .top-header div:last-child a i{
+    header .top-header div:last-child a i {
         color: #feb8ce;
         font-size: 1.8rem
     }
 
-    header .h-main{
+    header .h-main {
         width: 100%;
         height: 6.5rem;
         position: relative;
@@ -65,34 +65,34 @@
         justify-content: right;
         align-items: center;
         padding: 1rem 8rem;
-        
+
     }
 
-    header .h-main .img1{
+    header .h-main .img1 {
         width: 15rem;
         left: 50%;
         position: absolute;
         bottom: 0;
-        transform: translate(-50%,50%)
+        transform: translate(-50%, 50%)
     }
-    
-    header .h-main .sesion{
+
+    header .h-main .sesion {
         text-decoration: none;
         color: var(--green);
         font-size: 1.2rem;
     }
 
-    header .h-main a .ico1{
+    header .h-main a .ico1 {
         width: 3.3rem;
         margin-left: 1rem;
     }
 
-    header .h-main a .ico2{
+    header .h-main a .ico2 {
         width: 3.3rem;
         margin-left: 0.5rem;
     }
 
-    header .h-main .menu-toggle{
+    header .h-main .menu-toggle {
         display: none;
     }
 
@@ -105,7 +105,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro */
+        background-color: rgba(0, 0, 0, 0.7);
+        /* Fondo oscuro */
         z-index: 9999;
         justify-content: center;
         align-items: start;
@@ -143,7 +144,7 @@
         font-size: 18px;
         border-bottom: 1px solid #ddd;
         transition: 0.3s;
-        margin:0 auto;
+        margin: 0 auto;
     }
 
     .menu-content form button:hover {
@@ -162,7 +163,7 @@
     }
 
     header .h-main .menu-toggle {
-        display: none   ;
+        display: none;
         border: none;
         background-color: transparent;
         font-size: 2.5rem;
@@ -201,72 +202,74 @@
     }
 
     @media(min-width: 576px) and (max-width: 992px) {
-        header{
+        header {
             background-size: cover;
 
         }
-        header .top-header div:first-child .rosa{ 
+
+        header .top-header div:first-child .rosa {
             font-size: 0.8rem;
             letter-spacing: 0;
         }
 
-        header .top-header div:first-child .blanca{
+        header .top-header div:first-child .blanca {
             font-size: 0.8rem;
             letter-spacing: 0;
         }
 
-        header .top-header div:last-child a i{
+        header .top-header div:last-child a i {
             font-size: 1rem
         }
 
-        header .h-main{
-            padding: 1rem ;
-            
+        header .h-main {
+            padding: 1rem;
+
         }
 
 
-        header .h-main .sesion{
+        header .h-main .sesion {
             font-size: 1rem;
         }
 
-        header .h-main a .ico1{
+        header .h-main a .ico1 {
             width: 2.3rem;
         }
 
-        header .h-main a .ico2{
+        header .h-main a .ico2 {
             width: 2.3rem;
         }
 
     }
 
     @media(min-width: 0px) and (max-width: 576px) {
-        header{
+        header {
             background-size: cover;
 
         }
 
-        header .top-header div a i{
+        header .top-header div a i {
             font-size: 1.5rem
         }
 
-        header .h-main{
-            padding: 0.2rem 1rem ;
+        header .h-main {
+            padding: 0.2rem 1rem;
         }
 
-        
 
-        header .h-main .sesion{
+
+        header .h-main .sesion {
             display: none;
         }
 
-        header .h-main a .ico1{
-            display: none;
-        }
-        header .h-main a .ico2{
+        header .h-main a .ico1 {
             display: none;
         }
 
-        header .h-main .menu-toggle{
+        header .h-main a .ico2 {
+            display: none;
+        }
+
+        header .h-main .menu-toggle {
             display: block;
             border: none;
             background-color: transparent;
@@ -278,9 +281,8 @@
         header .h-main .menu-toggle {
             display: block;
         }
-        
-    }
 
+    }
 </style>
 
 <header>
@@ -293,14 +295,15 @@
             <p class="rosa">HORARIO CDMX</p>
         </div> --}}
         <div>
-            <a href="{{$config->whatsapp}}"><i class="fa-brands fa-whatsapp"></i></a>
-            <a href="{{$config->instagram}}"><i class="fa-brands fa-instagram"></i></a>
-            <a href="{{$config->facebook}}"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="{{ $config->whatsapp }}"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="{{ $config->instagram }}"><i class="fa-brands fa-instagram"></i></a>
+            <a href="{{ $config->facebook }}"><i class="fa-brands fa-facebook-f"></i></a>
         </div>
     </div>
     <div class="h-main">
-        <a href="{{route('front.home')}}"><img class="img1" src="{{asset('img/design/recursos/logo.png')}}" alt=""></a>
-       
+        <a href="{{ route('front.home') }}"><img class="img1" src="{{ asset('img/design/recursos/logo.png') }}"
+                alt=""></a>
+
         @guest
             <a href="{{ route('login') }}" class="sesion">Inicio de sesión</a>
         @endguest
@@ -308,30 +311,39 @@
         @auth
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit" class="sesion" style="border: none; background-color:transparent;">Cerrar sesión</button>
+                <button type="submit" class="sesion" style="border: none; background-color:transparent;">Cerrar
+                    sesión</button>
             </form>
         @endauth
 
 
 
-        <a href="{{route('user.home')}}"><img class="ico1" src="{{asset('img/design/recursos/user.png')}}" alt=""></a>
+        <a href="{{ route('user.home') }}"><img class="ico1" src="{{ asset('img/design/recursos/user.png') }}"
+                alt=""></a>
 
-        <a id="carritoToggle">
-            <img class="ico2" src="{{ asset('img/design/recursos/shop.png') }}" alt="">
-        </a>
+        @auth
+            <a id="carritoToggle">
+                <img class="ico2" src="{{ asset('img/design/recursos/shop.png') }}" alt="">
+            </a>
+        @endauth
         <div id="carritoContenedor" style="display:none">
             <div id="carrito-contenedor">
                 @include('layouts.partials.carrito')
             </div>
-            <div class="carrito-total-wrapper" style="display: flex; justify-content: space-between; padding: 0 2rem; margin-top: 1rem;">
+            <div class="carrito-total-wrapper"
+                style="display: flex; justify-content: space-between; padding: 0 2rem; margin-top: 1rem;">
                 <p>Total:</p>
                 <p class="total-monto">$0.00 MXN</p>
             </div>
-            
-            <form action="{{route('front.detalleCarrito')}}" method="GET">
+
+            <form action="{{ route('front.detalleCarrito') }}" method="GET">
                 @csrf
                 <button class="style-btn-comprar" disabled>FINALIZAR COMPRA</button>
             </form>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2e6aa80 (cambios pasarela de pago)
         </div>
 
         <a href="#" id="menuIcon">
@@ -344,6 +356,7 @@
 
 <div id="menuModal" class="menu-modal">
     <div class="menu-content">
+<<<<<<< HEAD
         <a href="{{route('front.home')}}">Inicio</a>
         <a href="{{route('front.nosotros')}}">Catalogo</a>
         <a id="carritoToggleTexto">
@@ -352,6 +365,15 @@
         
         <a href="{{route('user.home')}}">Usuario</a>
         
+=======
+        <a href="{{ route('front.home') }}">Inicio</a>
+        <a href="{{ route('front.nosotros') }}">Catalogo</a>
+        <a id="carritoToggle">
+            Carrito
+        </a>
+        <a href="{{ route('user.home') }}">Usuario</a>
+
+>>>>>>> 2e6aa80 (cambios pasarela de pago)
         @guest
             <a href="{{ route('login') }}" class="sesion">Inicio de sesión</a>
         @endguest
@@ -359,7 +381,8 @@
         @auth
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit" class="sesion" style="border: none; background-color:transparent;">Cerrar sesión</button>
+                <button type="submit" class="sesion" style="border: none; background-color:transparent;">Cerrar
+                    sesión</button>
             </form>
         @endauth
 
@@ -457,7 +480,6 @@
             }
         });
     });
-
 </script>
 
 <script>
@@ -507,4 +529,3 @@
         });
     });
 </script>
-
